@@ -28,7 +28,6 @@ class Bot:
         if event_name not in self._events:
             self._events[event_name] = []
         self._events[event_name].append(func)
-        print(f"DEBUG: {event_name}")
         return func
     async def callevent(self, event, *args):
         try:
