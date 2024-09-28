@@ -52,7 +52,6 @@ class Bot:
         self.writer.write(f"NICK {nickname}\r\n")
         self.writer.write(f"USER {nickname} 0 * :{nickname}\r\n")
         self.writer.write(f"JOIN {channel}\r\n")
-        self.writer.write(f"PRIVMSG {channel} :Logged in.\r\n")
         await self.callevent("ready", nickname, channel)
         while True:
             line = await self.reader.readline()
