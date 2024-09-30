@@ -51,10 +51,10 @@ class Bot:
         )
         self.writer.write(f"NICK {nickname}\r\n")
         self.writer.write(f"USER {nickname} 0 * :{nickname}\r\n")
-        self.writer.write(f"JOIN {channel}\r\n")
         nickserv_password = os.environ.get("IRCPY_NICKSERV_PASSWORD")
         if nickserv_password:
             self.writer.write(f"PRIVMSG NickServ :IDENTIFY {nickserv_password}\r\n")
+        self.writer.write(f"JOIN {channel}\r\n")
         await self.callevent("ready", nickname, channel)
         while True:
             line = await self.reader.readline()
