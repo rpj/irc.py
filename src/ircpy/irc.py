@@ -1,6 +1,7 @@
 import asyncio
 import telnetlib3
 import re
+import os
 class Bot:
     def __init__(self,  **kwargs):
         self._events = {}
@@ -51,6 +52,9 @@ class Bot:
         self.writer.write(f"NICK {nickname}\r\n")
         self.writer.write(f"USER {nickname} 0 * :{nickname}\r\n")
         self.writer.write(f"JOIN {channel}\r\n")
+        nickserv_password = os.environ.get("IRCPY_NICKSERV_PASSWORD")
+        if nickserv_password:
+            self.writer.write(f"PRIVMSG NickServ :IDENTIFY {nickserv_password}\r\n")
         await self.callevent("ready", nickname, channel)
         while True:
             line = await self.reader.readline()
@@ -86,3 +90,6 @@ class Bot:
                    else:
                        arguments.append(arg)
                await self.callevent(cmd, arguments, user, channel, msg)
+        else:
+            if os.environ.get("IRCPY_DEBUG"):
+                print(line)
