@@ -101,15 +101,16 @@ class Bot:
             self.writer.write(f"PONG {line.split()[1]}\r\n")
 
         if "PRIVMSG" in line:
-           splittedline = line.split('PRIVMSG')[0]
-           msg = re.findall(f"(?<={channel} :).*$", line)
+           fullident = line.split('PRIVMSG')[0]
+           msg = re.findall(f"(?<={channel.lower()} :).*$", line)
            if msg:
                msg = msg[0]
-           user = re.findall("(?<=~).*(?=@)", splittedline)
+           user = re.findall("(?<=~).*(?=@)", fullident)
            if user:
                user = user[0]
            if not prefix in line:
-               await self.callevent("message_received", msg, user, channel)
+               [nick, ident] = fullident[1:].strip().split("!")
+               await self.callevent("message_received", msg, user, channel, nick, ident)
            else:
                try:
                    msg_splitted = msg.split(' ')
